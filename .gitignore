@@ -1,0 +1,4 @@
+.DS_Store
+lib/
+bun.lockb
+node_modules

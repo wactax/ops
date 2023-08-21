@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if ! [ -x "$(command -v pnpm)" ]; then
+  npm i -g pnpm
+fi
+
+pnpm i -C $i

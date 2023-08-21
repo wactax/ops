@@ -1,0 +1,5 @@
+freenom/
+.id_rsa.freeom
+.key.bin
+*.swp
+.env
