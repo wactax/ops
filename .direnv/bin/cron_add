@@ -9,9 +9,9 @@ mkdir -p /var/log/crontab/$(dirname $LOG)
 cd $2
 direnv allow
 
-run="cd $2 && timeout 24h direnv exec . ./${@:3}"
+run="cd $2 && exec timeout 24h direnv exec . ./${@:3}"
 
-job="$1 * * source /etc/profile && $run > /var/log/crontab/$LOG.log 2>&1"
+job="$1 * * bash -c \"source /etc/profile && $run\" > /var/log/crontab/$LOG.log 2>&1"
 
 crontab -l | (
   cat | grep -v -F "$run"
@@ -19,4 +19,5 @@ crontab -l | (
 ) | crontab -
 
 echo -e "\033[32mcrontab added\033[0m"
-echo "$job"
+echo -e "\n$job\n"
+
