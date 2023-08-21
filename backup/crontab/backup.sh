@@ -8,10 +8,10 @@ BKDIR=$BACKUP/crontab
 mkdir -p $BKDIR
 
 txt=$(hostname).txt
+git pull -f
 crontab -l >$BKDIR/$txt
 cd $BKDIR
 git add $txt
 git add -u
 git commit -m"$hostname crontab backup" || exit 0
-git pull || true
 git push
