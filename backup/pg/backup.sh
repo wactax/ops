@@ -6,4 +6,3 @@ cd $DIR
 bunx cep -c src -o lib
 cd ./lib
 ./main.js
-./data.js
