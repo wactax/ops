@@ -3,8 +3,7 @@
 DIR=$(dirname $(realpath "$0"))
 cd $DIR
 
-set -o allexport
-source ./.env
-set +o allexport
-./src/main.coffee
-./data.coffee
+bunx cep -c src -o lib
+cd ./lib
+./main.js
+./data.js
