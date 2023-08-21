@@ -4,11 +4,12 @@ DIR=$(dirname $(realpath "$0"))
 cd $DIR
 set -ex
 
-BACKUP=/mnt/backup/crontab
-mkdir -p $BACKUP
+BKDIR=$BACKUP/crontab
+mkdir -p $BKDIR
 
 txt=$(hostname).txt
-crontab -l >$BACKUP/$txt
-cd $BACKUP
+crontab -l >$BKDIR/$txt
+cd $BKDIR
 git add $txt
-gitsync
+git add -u
+git commit -m"$hostname crontab backup" && git push
