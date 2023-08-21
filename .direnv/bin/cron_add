@@ -9,7 +9,7 @@ mkdir -p /var/log/crontab/$(dirname $LOG)
 cd $2
 direnv allow
 
-run="cd $2 && exec timeout 24h direnv exec . ./${@:3}"
+run="cd $2 && exec timeout 24h direnv exec . ${@:3}"
 
 job="$1 * * bash -c \"source /etc/profile && $run\" > /var/log/crontab/$LOG.log 2>&1"
 
