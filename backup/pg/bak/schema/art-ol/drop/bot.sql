@@ -8,6 +8,43 @@ SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
+DROP TRIGGER IF EXISTS trigger_civitai_img ON bot.civitai_img;
+DROP INDEX IF EXISTS bot."task.hash";
+DROP INDEX IF EXISTS bot."task.cid.rid";
+DROP INDEX IF EXISTS bot."meta.hash";
+DROP INDEX IF EXISTS bot."civitai_img.url";
+ALTER TABLE IF EXISTS ONLY bot.task DROP CONSTRAINT IF EXISTS task_pkey;
+ALTER TABLE IF EXISTS ONLY bot.meta DROP CONSTRAINT IF EXISTS meta_pkey;
+ALTER TABLE IF EXISTS ONLY bot.meta DROP CONSTRAINT IF EXISTS meta_hash_key;
+ALTER TABLE IF EXISTS ONLY bot.clip_same DROP CONSTRAINT IF EXISTS clip_same_pkey;
+ALTER TABLE IF EXISTS ONLY bot.civitai_user DROP CONSTRAINT IF EXISTS civitai_user_pkey;
+ALTER TABLE IF EXISTS ONLY bot.civitai_post DROP CONSTRAINT IF EXISTS civitai_review_pkey;
+ALTER TABLE IF EXISTS ONLY bot.civitai_img DROP CONSTRAINT IF EXISTS civitai_img_pkey;
+ALTER TABLE IF EXISTS ONLY bot.adult DROP CONSTRAINT IF EXISTS adult_pkey;
+ALTER TABLE IF EXISTS ONLY bot.adult_mc DROP CONSTRAINT IF EXISTS adult_mc_pkey;
+ALTER TABLE IF EXISTS ONLY bot.adult_hw DROP CONSTRAINT IF EXISTS adult_hw_pkey;
+ALTER TABLE IF EXISTS ONLY bot.adult_google DROP CONSTRAINT IF EXISTS adult_google_pkey;
+ALTER TABLE IF EXISTS ONLY bot.adult_deepai DROP CONSTRAINT IF EXISTS adult_deepai_pkey;
+ALTER TABLE IF EXISTS ONLY bot.adult_baidu DROP CONSTRAINT IF EXISTS adult_baidu_pkey;
+ALTER TABLE IF EXISTS bot.task ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS bot.meta ALTER COLUMN id DROP DEFAULT;
+DROP SEQUENCE IF EXISTS bot.task_id_seq;
+DROP TABLE IF EXISTS bot.task;
+DROP SEQUENCE IF EXISTS bot.meta_id_seq;
+DROP TABLE IF EXISTS bot.meta;
+DROP TABLE IF EXISTS bot.clip_same;
+DROP TABLE IF EXISTS bot.civitai_user;
+DROP TABLE IF EXISTS bot.civitai_post;
+DROP TABLE IF EXISTS bot.civitai_img;
+DROP SEQUENCE IF EXISTS bot.civitai_img_id_seq;
+DROP TABLE IF EXISTS bot.adult_mc;
+DROP TABLE IF EXISTS bot.adult_hw;
+DROP TABLE IF EXISTS bot.adult_google;
+DROP TABLE IF EXISTS bot.adult_deepai;
+DROP TABLE IF EXISTS bot.adult_baidu;
+DROP TABLE IF EXISTS bot.adult;
+DROP FUNCTION IF EXISTS bot.trigger_civitai_img();
+DROP SCHEMA IF EXISTS bot;
 CREATE SCHEMA bot;
 SET search_path TO bot;
 CREATE OR REPLACE FUNCTION bot.trigger_civitai_img() RETURNS trigger
@@ -16,10 +53,10 @@ CREATE OR REPLACE FUNCTION bot.trigger_civitai_img() RETURNS trigger
     IF (TG_OP = 'INSERT') THEN
         INSERT INTO bot.task (cid, rid, priority) VALUES (1, NEW.id, round(log(1.3,4+NEW.star))-5)
         ON CONFLICT (cid, rid) DO NOTHING;
-ELSIF (TG_OP = 'DELETE') THEN
+    ELSIF (TG_OP = 'DELETE') THEN
         DELETE FROM bot.task WHERE rid = OLD.id AND cid = 1;
-END IF;
-RETURN NULL;
+    END IF;
+    RETURN NULL;
 END;
 $$;
 SET default_tablespace = '';
@@ -113,6 +150,10 @@ CREATE TABLE bot.civitai_user (
     id bigint NOT NULL,
     val text NOT NULL
 );
+CREATE TABLE bot.clip_same (
+    id public.u64 NOT NULL,
+    rid public.u64 NOT NULL
+);
 CREATE TABLE bot.meta (
     id bigint NOT NULL,
     val text NOT NULL,
@@ -165,6 +206,8 @@ ALTER TABLE ONLY bot.civitai_post
     ADD CONSTRAINT civitai_review_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY bot.civitai_user
     ADD CONSTRAINT civitai_user_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY bot.clip_same
+    ADD CONSTRAINT clip_same_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY bot.meta
     ADD CONSTRAINT meta_hash_key UNIQUE (hash);
 ALTER TABLE ONLY bot.meta

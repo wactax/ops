@@ -8,6 +8,3 @@ SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
-CREATE SCHEMA public;
-SET search_path TO public;
-COMMENT ON SCHEMA public IS 'standard public schema';
