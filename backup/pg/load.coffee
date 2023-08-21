@@ -32,7 +32,7 @@ BAK = join PWD,'bak'
   return
 
 if process.argv[1] == decodeURI (new URL(import.meta.url)).pathname
-  for i in 'art apg'.split(' ')
+  for i in 'pg apg'.split(' ')
     uri = process.env[i.toUpperCase()+'_URI']
     if uri
       await main(uri,i+'-ol')
