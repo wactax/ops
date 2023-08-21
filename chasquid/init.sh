@@ -20,7 +20,7 @@ fi
 if ! [ -x "$(command -v chasquid)" ]; then
   rm -rf /etc/chasquid /etc/systemd/system/chasquid* /tmp/chasquid
   cd /tmp
-  git clone https://blitiri.com.ar/repos/chasquid
+  git clone --depth=1 https://github.com/albertito/chasquid.git
   cd chasquid
   make
   make install-binaries
