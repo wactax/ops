@@ -12,4 +12,6 @@ crontab -l >$BKDIR/$txt
 cd $BKDIR
 git add $txt
 git add -u
-git commit -m"$hostname crontab backup" && git push
+git commit -m"$hostname crontab backup" || exit 0
+git pull || true
+git push
