@@ -11,9 +11,9 @@
   ./dir > SCHEMA
   fs/promises > rename readFile opendir
 
+{PG_BACKUP_TABLE,PG_URI,APG_URI} = process.env
 
 bucket='sj-backup:backup'
-
 
 rmOutdate = =>
   {stdout} = await $"rclone lsjson #{bucket}"
@@ -36,6 +36,8 @@ dump = (uri)=>
   q = await postgres uri
   db = new URL(uri).pathname.slice(1)
   await table(db, q, uri)
+  if PG_BACKUP_TABLE
+    return
   for [schema_name] from await q'''select schema_name from information_schema.schemata WHERE schema_name NOT IN ('information_schema', 'pg_catalog')'''.values()
     schema_name = schema_name.trim()
     if schema_name == 'pg_toast'
@@ -70,7 +72,6 @@ dump = (uri)=>
   await data(db, q, uri)
   return
 
-{PG_URI,APG_URI} = process.env
 await Promise.all [
   APG_URI
   PG_URI
