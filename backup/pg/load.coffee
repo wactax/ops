@@ -4,7 +4,8 @@
   @w5/uridir
   path > basename join
 
-BAK = join uridir(import.meta),'bak'
+PWD = uridir(import.meta)
+BAK = join PWD,'bak'
 
 < default main = (uri,dir)=>
   # if not ( uri and uri.endsWith '-dev' )
@@ -19,6 +20,8 @@ BAK = join uridir(import.meta),'bak'
 
   sh = (cmd)=>
     $"sh -c #{cmd}"
+
+  await sh "#{psql} < #{PWD}/extension.sql"
 
   for sql from sql_li.trim().split '\n'
     schema = basename(sql).slice(0,-4)
