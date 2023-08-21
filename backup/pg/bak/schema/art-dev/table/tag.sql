@@ -1,0 +1,30 @@
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+CREATE SCHEMA tag;
+SET search_path TO tag;
+SET default_tablespace = '';
+SET default_table_access_method = heap;
+CREATE TABLE tag.tag (
+    id bigint NOT NULL,
+    val text NOT NULL
+);
+CREATE SEQUENCE tag.tag_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE tag.tag_id_seq OWNED BY tag.tag.id;
+ALTER TABLE ONLY tag.tag ALTER COLUMN id SET DEFAULT nextval('tag.tag_id_seq'::regclass);
+ALTER TABLE ONLY tag.tag
+    ADD CONSTRAINT tag_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY tag.tag
+    ADD CONSTRAINT tag_val_key UNIQUE (val);
