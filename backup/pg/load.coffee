@@ -7,9 +7,9 @@
 BAK = join uridir(import.meta),'bak'
 
 < default main = (uri,dir)=>
-  if not ( uri and uri.endsWith '-dev' )
-    console.log "数据库名称不包含 -dev 不执行，小心误操作\n#{uri}"
-    return
+  # if not ( uri and uri.endsWith '-dev' )
+  #   console.log "数据库名称不包含 -dev 不执行，小心误操作\n#{uri}"
+  #   return
   cd "#{BAK}/schema/#{dir}/drop"
 
   {
