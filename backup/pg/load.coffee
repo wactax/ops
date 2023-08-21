@@ -2,22 +2,20 @@
 
 > zx/globals:
   @w5/uridir
-  path > basename
+  path > basename join
 
-{ PG_URI } = process.env
+BAK = join uridir(import.meta),'bak'
 
-if not ( PG_URI and PG_URI.endsWith '-dev' )
-  console.log "数据库名称不包含 -dev 不执行，小心误操作"
-  process.exit()
-
-< default main = =>
-  ROOT = uridir(import.meta)
-  cd "#{ROOT}/dump/art-ol/art-ol/drop"
+< default main = (uri,dir)=>
+  if not ( uri and uri.endsWith '-dev' )
+    console.log "数据库名称不包含 -dev 不执行，小心误操作\n#{uri}"
+    return
+  cd "#{BAK}/schema/#{dir}/drop"
 
   {
     stdout:sql_li
   } = await $"ls *.sql"
-  psql = "psql postgres://#{PG_URI}"
+  psql = "psql postgres://#{uri}"
 
   sh = (cmd)=>
     $"sh -c #{cmd}"
@@ -27,10 +25,13 @@ if not ( PG_URI and PG_URI.endsWith '-dev' )
     if schema != 'public'
       await sh """#{psql} -c "DROP SCHEMA #{schema} CASCADE" || true"""
     await sh "#{psql} < #{sql}"
-    await sh "zstd -qcd #{ROOT}/data/art-ol/#{schema}.zstd | pg_restore --disable-triggers -d 'postgres://#{PG_URI}'"
+    await sh "zstd -qcd #{BAK}/data/#{dir}/#{schema}.zstd | pg_restore --disable-triggers -d 'postgres://#{uri}'"
   return
 
 if process.argv[1] == decodeURI (new URL(import.meta.url)).pathname
-  await main()
+  for i in 'art apg'.split(' ')
+    uri = process.env[i.toUpperCase()+'_URI']
+    if uri
+      await main(uri,i+'-ol')
   process.exit()
 
