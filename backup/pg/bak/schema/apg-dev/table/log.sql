@@ -36,11 +36,12 @@ $$;
 SET default_tablespace = '';
 SET default_table_access_method = heap;
 CREATE TABLE log.seen_click_fav (
-    cid public.u8 NOT NULL,
+    cid public.i8 NOT NULL,
     rid public.u64 NOT NULL,
     seen public.u64 DEFAULT 0 NOT NULL,
     click public.u64 DEFAULT 0 NOT NULL,
-    fav public.u64 DEFAULT 0 NOT NULL
+    fav public.u64 DEFAULT 0 NOT NULL,
+    hour public.u32 NOT NULL
 );
 CREATE TABLE log.seen_click_fav_sum (
     seen public.u64 DEFAULT 0 NOT NULL,
@@ -49,4 +50,5 @@ CREATE TABLE log.seen_click_fav_sum (
 );
 ALTER TABLE ONLY log.seen_click_fav
     ADD CONSTRAINT seen_click_fav_pkey PRIMARY KEY (cid, rid);
+CREATE INDEX IF NOT EXISTS "seen_click_fav.hour_cid_rid" ON log.seen_click_fav USING btree (hour DESC, cid NULLS FIRST, rid NULLS FIRST);
 CREATE TRIGGER seen_click_fav_sum AFTER INSERT OR DELETE OR UPDATE ON log.seen_click_fav FOR EACH ROW EXECUTE FUNCTION log.seen_click_fav_sum();
