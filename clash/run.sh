@@ -8,4 +8,4 @@ if ! [ -x "$(command -v clash)" ]; then
   go install github.com/Dreamacro/clash@latest
 fi
 
-clash -f ./clash.yaml
+clash -f ./clash.yml
