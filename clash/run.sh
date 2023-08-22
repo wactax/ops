@@ -5,7 +5,7 @@ cd $DIR
 set -ex
 
 if ! [ -x "$(command -v clash)" ]; then
-go install github.com/Dreamacro/clash@latest
+  go install github.com/Dreamacro/clash@latest
 fi
 
-clash -f ./config.yaml
+clash -f ./clash.yaml
