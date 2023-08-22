@@ -4,12 +4,8 @@ DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
 set -ex
 
-set -o allexport
-source ./.env
-set +o allexport
-
-./load.coffee
-
+bunx cep -c src -o lib
+./lib/load.js
 # if [[ $PG_URI != *-dev* ]]; then
 #   echo "数据库名称不包含 -dev 不执行，小心误操作"
 #   exit 0
