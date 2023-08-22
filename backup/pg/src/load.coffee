@@ -3,14 +3,13 @@
 > zx/globals:
   @w5/uridir
   path > basename join
+  ./dir > BAK ROOT
 
-PWD = uridir(import.meta)
-BAK = join PWD,'bak'
 
 < default main = (uri,dir)=>
-  # if not ( uri and uri.endsWith '-dev' )
-  #   console.log "数据库名称不包含 -dev 不执行，小心误操作\n#{uri}"
-  #   return
+  if not ( uri and uri.endsWith '-dev' )
+    console.log "数据库名称不包含 -dev 不执行，小心误操作\n#{uri}"
+    return
   cd "#{BAK}/schema/#{dir}/drop"
 
   {
@@ -21,7 +20,7 @@ BAK = join PWD,'bak'
   sh = (cmd)=>
     $"sh -c #{cmd}"
 
-  await sh "#{psql} < #{PWD}/extension.sql"
+  await sh "#{psql} < #{ROOT}/extension.sql"
 
   for sql from sql_li.trim().split '\n'
     schema = basename(sql).slice(0,-4)
