@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
-DIR=$(realpath ${0%/*/*/*})
-
-LOG=${2:((1+${#DIR}))}
-
-mkdir -p /var/log/crontab/$(dirname $LOG)
-
 cd $2
-direnv allow
 
-run="cd $2 && exec timeout 24h direnv exec . ${@:3}"
+cronrun=/usr/local/bin/cronrun
 
-job="$1 * * bash -c \"source /etc/profile && $run\" > /var/log/crontab/$LOG.log 2>&1"
+if ! [ -f "$cronrun" ]; then
+sudo rm -rf $cronrun
+sudo wget https://raw.githubusercontent.com/wactax/ops.os/main/os/usr/local/bin/cronrun -O $cronrun
+sudo chmod +x $cronrun
+fi
+
+run="${@:2}"
+job="$1 * * $cronrun $run"
 
 crontab -l | (
   cat | grep -v -F "$run"
@@ -19,5 +19,5 @@ crontab -l | (
 ) | crontab -
 
 echo -e "\033[32mcrontab added\033[0m"
-echo -e "\n$job\n"
 
+crontab -l
