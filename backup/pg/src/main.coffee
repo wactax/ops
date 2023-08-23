@@ -28,7 +28,6 @@ rmOutdate = =>
         if (nowym - (parseInt(ym/100)*12+ym%100))>3
           await $"rclone delete #{bucket+'/'+ym}"
 
-
 dump = (uri)=>
   if not uri
     return
