@@ -2,7 +2,7 @@
 
 DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
-set -x
+set -e
 
 source host_port.sh
 
