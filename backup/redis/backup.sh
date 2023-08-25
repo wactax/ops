@@ -4,21 +4,11 @@ DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
 set -e
 
+source host_port.sh
+
 dump() {
-  local host_port=$(eval echo \${$1_HOST_PORT})
+  host_port $(eval echo \${$1_HOST_PORT})
   local password=$(eval echo \${$1_PASSWORD})
-  if [[ $host_port =~ \[(([0-9a-fA-F:]+))\]:([0-9]+)$ ]]; then
-    # IPv6
-    local ip="${BASH_REMATCH[2]}"
-    local port="${BASH_REMATCH[3]}"
-  elif [[ $host_port =~ ([0-9\.]+):([0-9]+)$ ]]; then
-    # IPv4
-    local ip="${BASH_REMATCH[1]}"
-    local port="${BASH_REMATCH[2]}"
-  else
-    echo "$host_port Invalid Ip Format"
-    return 1
-  fi
 
   fp=$1/$(date "+%Y-%m-%d_%H.%M.%S").zstd
   tmp=/tmp/backup/redis.$fp
