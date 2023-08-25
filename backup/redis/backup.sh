@@ -29,9 +29,10 @@ dump() {
     -host $ip -port $port | zstd -19 >$tmp
 
   rclone copy $tmp $RCLONE_BAK/$(dirname $fp) && rm -rf $tmp
-  rclone lsjson $RCLONE_BAK/$1 | jq -r ".[].Name" | sort | head -n 2 | xargs -I {} rclone delete $RCLONE_BAK/$1/{}
+  rclone lsjson $RCLONE_BAK/$1 | jq -r ".[].Name" | sort | head -n -5 |
+    xargs -I {} rclone delete $RCLONE_BAK/$1/{}
 }
 
 dump REDIS
-dump KV
-dump AK
+# dump KV
+# dump AK
