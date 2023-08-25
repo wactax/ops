@@ -13,9 +13,9 @@ RCLONE_CP = join ROOT,'rclone_cp.sh'
   dir = join DATA,db
   await $"mkdir -p #{dir}"
 
-  for {schema_name} from await q"SELECT schema_name FROM information_schema.schemata WHERE schema_name NOT LIKE 'pg_%' AND schema_name != 'information_schema'"
+  for {schema_name:schema} from await q"SELECT schema_name FROM information_schema.schemata WHERE schema_name NOT LIKE 'pg_%' AND schema_name != 'information_schema'"
     fp = "#{dir}/#{schema}.zstd"
-    await dump(fp,uri,schema_name)
+    await dump(fp,uri,schema)
     bname = basename dir
     if not bname.includes '-dev'
       await $"#{RCLONE_CP} #{fp} pg.#{bname}"
