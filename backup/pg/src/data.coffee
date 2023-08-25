@@ -7,7 +7,7 @@ dump = (fp, uri, schema)=>
   await $"pg_dump #{uri} --data-only -n #{schema} -Fc -Z0 | zstd > #{fp}"
   return
 
-RCLONE_CP = join dirname(ROOT),'rclone_'
+RCLONE = join dirname(ROOT),'rclone_'
 
 dtStr = (date) =>
   tzo = -date.getTimezoneOffset()
