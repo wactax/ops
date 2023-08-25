@@ -21,7 +21,6 @@ dump() {
   fi
 
   fp=$1/$(date "+%Y-%m-%d_%H.%M.%S").zstd
-  echo "dump $1"
   tmp=/tmp/backup/redis.$fp
   mkdir -p $(dirname $tmp)
   docker run -e"REDISDUMPGO_AUTH=$password" \
@@ -33,6 +32,7 @@ dump() {
     xargs -I {} rclone delete $RCLONE_BAK/$1/{}
 }
 
-dump REDIS
-dump KV
-dump AK
+for name in $REDIS_LI; do
+  echo $name
+  dump $name
+done

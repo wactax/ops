@@ -5,7 +5,8 @@ cd $DIR
 set -ex
 
 load() {
-  rclone copy $RCLONE_BAK
-
-  redis-cli -h 127.0.0.1 -p 9970 -a $REDIS_PASSWORD --pipe $1
+  rclone lsjson $RCLONE_BAK/$1 | jq -r ".[].Name" | tail -1
+  # redis-cli -h 127.0.0.1 -p 9970 -a $REDIS_PASSWORD --pipe $1
 }
+
+load KV
