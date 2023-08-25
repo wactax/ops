@@ -16,7 +16,9 @@ dump() {
     ghcr.io/yannh/redis-dump-go:latest \
     -host $ip -port $port | zstd -19 >$tmp
 
-  ../rclone_cp.sh $tmp redis.$1
+  rdir=redis.$1
+  ../rclone_cp.sh $tmp $rdir
+  ../rclone_rm.sh $rdir
 }
 
 for name in $REDIS_LI; do
