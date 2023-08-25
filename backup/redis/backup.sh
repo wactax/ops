@@ -31,7 +31,7 @@ dump() {
   rclone copy $tmp $RCLONE_BAK/$(dirname $fp) && rm -rf $tmp
   rclone lsjson $RCLONE_BAK/$1 | jq -r ".[].Name" | sort | head -n -5 |
     xargs -I {} rclone delete $RCLONE_BAK/$1/{}
-  echo -e "\nrclone copy $RCLONE_BAK/$fp .\n"
+  echo -e "\nrclone copy $RCLONE_BAK/$fp /tmp/$1.zstd\n"
 }
 
 dump REDIS
