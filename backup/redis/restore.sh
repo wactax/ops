@@ -13,9 +13,10 @@ load() {
   name=$(rclone lsjson $bucket | jq -r ".[].Name" | sort | tail -1)
   file=$bucket/$name
   # echo $ip $port
-  mkdir -p /tmp/$1
-  fp=/tmp/$1/$name
-  rclone copy $file $fp
+  tmp=/tmp/$1
+  mkdir -p $tmp
+  fp=$tmp/$name
+  rclone copy $file $tmp
   ip=127.0.0.1 # 只对开发机做恢复
   zstd -d data.zst -c $fp | redis-cli -h $ip -p $port -a $password --pipe
 }
