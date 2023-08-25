@@ -9,6 +9,16 @@ dump = (fp, uri, schema)=>
 
 RCLONE_CP = join dirname(ROOT),'rclone_cp.sh'
 
+dtStr = (date) =>
+  tzo = -date.getTimezoneOffset()
+  dif = if tzo >= 0 then '+' else '-'
+
+  pad = (num) ->
+    norm = Math.floor(Math.abs(num))
+    (if norm < 10 then '0' else '') + norm
+
+  date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate()) + '_' + pad(date.getHours()) + '.' + pad(date.getMinutes()) + '.' + pad(date.getSeconds())
+
 < (db, q, uri)=>
   dir = join DATA,db
   await $"mkdir -p #{dir}"
@@ -18,7 +28,7 @@ RCLONE_CP = join dirname(ROOT),'rclone_cp.sh'
     await dump(fp,uri,schema)
     bname = basename dir
     if not bname.includes '-dev'
-      await $"#{RCLONE_CP} #{fp} pg.#{bname}"
+      await $"#{RCLONE_CP} #{fp} pg.#{bname}/#{dtStr(new Date)}"
   return
 
 if process.argv[1] == decodeURI (new URL(import.meta.url)).pathname
