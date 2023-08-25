@@ -1,20 +1,24 @@
 #!/usr/bin/env coffee
 
-> ./dir > DATA
-  path > join
+> ./dir > DATA ROOT
+  path > join basename
 
-dump = (dir, uri, schema)=>
-  await $"pg_dump #{uri} --data-only -n #{schema} -Fc -Z0 | zstd > #{dir}/#{schema}.zstd"
+dump = (fp, uri, schema)=>
+  await $"pg_dump #{uri} --data-only -n #{schema} -Fc -Z0 | zstd > #{fp}"
   return
+
+RCLONE_CP = join ROOT,'rclone_cp.sh'
 
 < (db, q, uri)=>
   dir = join DATA,db
-
   await $"mkdir -p #{dir}"
 
   for {schema_name} from await q"SELECT schema_name FROM information_schema.schemata WHERE schema_name NOT LIKE 'pg_%' AND schema_name != 'information_schema'"
-    await dump(dir,uri,schema_name)
-
+    fp = "#{dir}/#{schema}.zstd"
+    await dump(fp,uri,schema_name)
+    bname = basename dir
+    if not bname.includes '-dev'
+      await $"#{RCLONE_CP} #{fp} pg.#{bname}"
   return
 
 if process.argv[1] == decodeURI (new URL(import.meta.url)).pathname
