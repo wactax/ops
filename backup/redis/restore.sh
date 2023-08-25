@@ -4,4 +4,8 @@ DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
 set -ex
 
-redis-cli -h 127.0.0.1 -p 9970 -a $REDIS_PASSWORD --pipe <kvdb
+load() {
+  rclone copy $RCLONE_BAK
+
+  redis-cli -h 127.0.0.1 -p 9970 -a $REDIS_PASSWORD --pipe $1
+}
