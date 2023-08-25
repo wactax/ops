@@ -31,7 +31,7 @@ NOW = dtStr new Date
     fp = "#{dir}/#{schema}.zstd"
     await dump(fp,uri,schema)
     if rclone
-      await $"#{RCLONE_CP}cp.sh #{fp} #{pg_dir}/#{NOW}"
+      await $"#{RCLONE}cp.sh #{fp} #{pg_dir}/#{NOW}"
   if rclone
     await $"#{RCLONE}rm.sh #{pg_dir}"
   return
