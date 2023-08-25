@@ -2,7 +2,7 @@
 
 DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
-set -ex
+set -e
 
 dump() {
   local host_port=$(eval echo \${$1_HOST_PORT})
@@ -20,16 +20,18 @@ dump() {
     return 1
   fi
 
-  time=$(date "+%Y-%m-%d_%H.%M.%S")
-  fp=/$1/$time.zstd
-  tmp=/tmp/backup/redis$fp
+  fp=$1/$(date "+%Y-%m-%d_%H.%M.%S").zstd
+  echo "dump $1"
+  tmp=/tmp/backup/redis.$fp
   mkdir -p $(dirname $tmp)
-  docker run -e"REDISDUMPGO_AUTH=$password" ghcr.io/yannh/redis-dump-go:latest -host $ip -port $port | zstd -19 >$tmp
+  docker run -e"REDISDUMPGO_AUTH=$password" \
+    ghcr.io/yannh/redis-dump-go:latest \
+    -host $ip -port $port | zstd -19 >$tmp
 
-  bash -c "rclone copy $tmp $RCLONE_BAK$fp/ && rm -rf $tmp" &
+  rclone copy $tmp $RCLONE_BAK/$(dirname $fp) && rm -rf $tmp
+  rclone lsjson $RCLONE_BAK/$1 | jq -r ".[].Name" | sort | head -n 2 | xargs -I {} rclone delete $RCLONE_BAK/$1/{}
 }
 
 dump REDIS
 dump KV
 dump AK
-wait
