@@ -8,10 +8,16 @@ source host_port.sh
 
 load() {
   host_port $(eval echo \${$1_HOST_PORT})
-  name=$(rclone lsjson $RCLONE_BAK/$1 | jq -r ".[].Name" | tail -1)
-  echo $name
-  echo $ip $port
-  # redis-cli -h 127.0.0.1 -p 9970 -a $REDIS_PASSWORD --pipe $1
+  local password=$(eval echo \${$1_PASSWORD})
+  bucket=$RCLONE_BAK/$1
+  name=$(rclone lsjson $bucket | jq -r ".[].Name" | sort | tail -1)
+  file=$bucket/$name
+  # echo $ip $port
+  mkdir -p /tmp/$1
+  fp=/tmp/$1/$name
+  rclone copy $file $fp
+  ip=127.0.0.1 # 只对开发机做恢复
+  zstd -d data.zst -c $fp | redis-cli -h $ip -p $port -a $password --pipe
 }
 
 for name in $REDIS_LI; do
