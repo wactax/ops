@@ -2,7 +2,7 @@
 
 DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
-set -e
+set -ex
 
 source host_port.sh
 
@@ -18,7 +18,7 @@ load() {
   fp=$tmp/$name
   rclone copy $file $tmp
   ip=127.0.0.1 # 只对开发机做恢复
-  zstd -d data.zst -c $fp | redis-cli -h $ip -p $port -a $password --pipe
+  zstd -d $fp -c | redis-cli -h $ip -p $port -a $password --pipe
 }
 
 for name in $REDIS_LI; do
