@@ -19,6 +19,8 @@ dtStr = (date) =>
 
   date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate()) + '_' + pad(date.getHours()) + '.' + pad(date.getMinutes()) + '.' + pad(date.getSeconds())
 
+NOW = dtStr new Date
+
 < (db, q, uri)=>
   dir = join DATA,db
   await $"mkdir -p #{dir}"
@@ -28,7 +30,7 @@ dtStr = (date) =>
     await dump(fp,uri,schema)
     bname = basename dir
     if not bname.includes '-dev'
-      await $"#{RCLONE_CP} #{fp} pg.#{bname}/#{dtStr(new Date)}"
+      await $"#{RCLONE_CP} #{fp} pg.#{bname}/#{NOW}"
   return
 
 if process.argv[1] == decodeURI (new URL(import.meta.url)).pathname
