@@ -21,14 +21,15 @@ dump() {
   fi
 
   time=$(date "+%Y-%m-%d_%H.%M.%S")
-  fp=/backup/redis/$1/$time.zstd
-  tmp=/tmp$fp
+  fp=/$1/$time.zstd
+  tmp=/tmp/backup/redis$fp
   mkdir -p $(dirname $tmp)
   docker run -e"REDISDUMPGO_AUTH=$password" ghcr.io/yannh/redis-dump-go:latest -host $ip -port $port | zstd -19 >$tmp
-  rclone copy $tmp $RCLONE_BAK$(dirname $fp)/
-  rm -rf $tmp
+
+  bash -c "rclone copy $tmp $RCLONE_BAK$fp/ && rm -rf $tmp" &
 }
 
 dump REDIS
 dump KV
 dump AK
+wait
