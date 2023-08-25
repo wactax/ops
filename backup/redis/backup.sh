@@ -7,6 +7,7 @@ set -e
 source host_port.sh
 
 dump() {
+  echo "→ $1"
   host_port $(eval echo \${$1_HOST_PORT})
   local password=$(eval echo \${$1_PASSWORD})
 
@@ -22,11 +23,9 @@ dump() {
 }
 
 if [ -z "$1" ]; then
-  echo $1
-  dump $1
-else
   for name in $REDIS_LI; do
-    echo $name
     dump $name
   done
+else
+  dump $1
 fi
