@@ -8,8 +8,9 @@ source host_port.sh
 
 load() {
   host_port $(eval echo \${$1_HOST_PORT})
+  name=$(rclone lsjson $RCLONE_BAK/$1 | jq -r ".[].Name" | tail -1)
+  echo $name
   echo $ip $port
-  # rclone lsjson $RCLONE_BAK/$1 | jq -r ".[].Name" | tail -1
   # redis-cli -h 127.0.0.1 -p 9970 -a $REDIS_PASSWORD --pipe $1
 }
 
