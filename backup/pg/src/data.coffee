@@ -7,7 +7,7 @@ dump = (fp, uri, schema)=>
   await $"pg_dump #{uri} --data-only -n #{schema} -Fc -Z0 | zstd > #{fp}"
   return
 
-RCLONE_CP = join dirname(ROOT),'rclone_cp.sh'
+RCLONE_CP = join dirname(ROOT),'rclone_'
 
 dtStr = (date) =>
   tzo = -date.getTimezoneOffset()
@@ -24,13 +24,16 @@ NOW = dtStr new Date
 < (db, q, uri)=>
   dir = join DATA,db
   await $"mkdir -p #{dir}"
-
+  bname = basename dir
+  pg_dir = "pg.#{bname}"
+  rclone = not bname.includes '-dev'
   for {schema_name:schema} from await q"SELECT schema_name FROM information_schema.schemata WHERE schema_name NOT LIKE 'pg_%' AND schema_name != 'information_schema'"
     fp = "#{dir}/#{schema}.zstd"
     await dump(fp,uri,schema)
-    bname = basename dir
-    if not bname.includes '-dev'
-      await $"#{RCLONE_CP} #{fp} pg.#{bname}/#{NOW}"
+    if rclone
+      await $"#{RCLONE_CP}cp.sh #{fp} #{pg_dir}/#{NOW}"
+  if rclone
+    await $"#{RCLONE}rm.sh #{pg_dir}"
   return
 
 if process.argv[1] == decodeURI (new URL(import.meta.url)).pathname
