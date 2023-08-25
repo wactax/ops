@@ -9,7 +9,7 @@ source host_port.sh
 load() {
   host_port $(eval echo \${$1_HOST_PORT})
   local password=$(eval echo \${$1_PASSWORD})
-  bucket=$RCLONE_BAK/$1
+  bucket=$RCLONE_BAK/redis.$1
   name=$(rclone lsjson $bucket | jq -r ".[].Name" | sort | tail -1)
   file=$bucket/$name
   # echo $ip $port
