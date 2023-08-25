@@ -1,13 +1,13 @@
 #!/usr/bin/env coffee
 
 > ./dir > DATA ROOT
-  path > join basename
+  path > join basename dirname
 
 dump = (fp, uri, schema)=>
   await $"pg_dump #{uri} --data-only -n #{schema} -Fc -Z0 | zstd > #{fp}"
   return
 
-RCLONE_CP = join ROOT,'rclone_cp.sh'
+RCLONE_CP = join dirname(ROOT),'rclone_cp.sh'
 
 < (db, q, uri)=>
   dir = join DATA,db
