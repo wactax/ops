@@ -4,7 +4,9 @@ DIR=$(dirname $(realpath "$0"))
 cd $DIR
 set -ex
 
-bun_i $DIR
+if [ ! -d "node_modules" ]; then
+  bun_i $DIR
+fi
 
 [ "$UID" -eq 0 ] || exec sudo "$0" "$@"
 
