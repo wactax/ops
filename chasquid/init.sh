@@ -8,8 +8,6 @@ if [ ! -d "node_modules" ]; then
   bun_i $DIR
 fi
 
-[ "$UID" -eq 0 ] || exec sudo "$0" "$@"
-
 if [ -v 1 ]; then
   HOST=$1
 else
@@ -18,6 +16,8 @@ else
 fi
 
 ../ssl.sh $HOST
+
+[ "$UID" -eq 0 ] || exec sudo "$0" "$@"
 
 if ! [ -x "$(command -v chasquid)" ]; then
   rm -rf /etc/chasquid /etc/systemd/system/chasquid* /tmp/chasquid
