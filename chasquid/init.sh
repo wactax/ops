@@ -88,7 +88,7 @@ fi
 
 rsync --ignore-existing -av $DIR/conf/ $conf
 rsync --ignore-existing -av $DIR/domains/ $conf/domains/$HOST
-chown -R $user:$user $conf
+chgrp -R $user $conf
 
 mkdir -p /var/lib/chasquid
 chown $user:$user /var/lib/chasquid
