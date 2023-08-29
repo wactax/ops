@@ -13,6 +13,10 @@ cp $DIR/supervisor/$ini $fp
 
 rtx="$(which rtx) env"
 
+if ! command -v sd &>/dev/null; then
+  cargo install sd
+fi
+
 sd -s "\$EXE" "bash -c \"eval \\\"\$($rtx)\\\" && cd $DIR && exec $DIR/run.sh\"" $fp
 
 supervisorctl update
