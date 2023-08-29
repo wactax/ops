@@ -4,6 +4,7 @@ DIR=$(dirname $(realpath "$0"))
 cd $DIR
 set -ex
 
+$DIR/../supervisor/init.sh
 ini=clash.ini
 
 fp=/etc/supervisor/conf.d/$ini
