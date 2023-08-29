@@ -19,7 +19,9 @@ if ! [ -x "$(command -v clash)" ]; then
     rtx list | awk '{print $1 " " $2}' >~/.tool-versions
   fi
   if ! [ -x "$(command -v clash)" ]; then
-    go install ghproxy.com/github.com/Dreamacro/clash@latest
+    go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct
+
+    go install github.com/Dreamacro/clash@latest
   fi
 fi
 
