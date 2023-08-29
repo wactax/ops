@@ -17,10 +17,10 @@ if ! [ -x "$(command -v clash)" ]; then
   if ! command -v go &>/dev/null; then
     rtx install go
     rtx list | awk '{print $1 " " $2}' >~/.tool-versions
+    eval $(rtx env)
   fi
   if ! [ -x "$(command -v clash)" ]; then
     go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct
-
     go install github.com/Dreamacro/clash@latest
   fi
 fi
