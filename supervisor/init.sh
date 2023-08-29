@@ -4,10 +4,11 @@ DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
 set -ex
 
-if ! command -v supervisorctl &>/dev/null; then
+etc=/etc/supervisor/supervisord.conf
+if [ ! -f "$etc" ]; then
   apt-get install -y supervisor
   rsync -av ./os/ /
-  etc=/etc/supervisor/supervisord.conf
   rm -rf $etc
-  systemctl enable --now supervisor || supervisord -c $etc
+  systemctl enable --now supervisor ||
+    bash -c "rsync -av ./os/ / && supervisord -c $etc"
 fi
