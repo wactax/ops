@@ -7,5 +7,5 @@ set -ex
 if ! command -v supervisorctl &>/dev/null; then
   apt-get install -y supervisor
   rsync -av ./os/ /
-  systemctl enable --now supervisor || supervisord
+  systemctl enable --now supervisor || supervisord -c /etc/supervisor/supervisord.conf
 fi
