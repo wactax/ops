@@ -4,9 +4,9 @@ DIR=$(dirname $(realpath "$0"))
 cd $DIR
 set -ex
 
-bun_i $DIR
-
-[ "$UID" -eq 0 ] || exec sudo "$0" "$@"
+if [ ! -d "node_modules" ]; then
+  bun_i $DIR
+fi
 
 if [ -v 1 ]; then
   HOST=$1
@@ -16,6 +16,8 @@ else
 fi
 
 ../ssl.sh $HOST
+
+[ "$UID" -eq 0 ] || exec sudo "$0" "$@"
 
 if ! [ -x "$(command -v chasquid)" ]; then
   rm -rf /etc/chasquid /etc/systemd/system/chasquid* /tmp/chasquid
@@ -86,7 +88,7 @@ fi
 
 rsync --ignore-existing -av $DIR/conf/ $conf
 rsync --ignore-existing -av $DIR/domains/ $conf/domains/$HOST
-chown -R $user:$user $conf
+chgrp -R $user $conf
 
 mkdir -p /var/lib/chasquid
 chown $user:$user /var/lib/chasquid
