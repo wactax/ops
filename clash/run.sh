@@ -16,7 +16,7 @@ if ! [ -x "$(command -v clash)" ]; then
   fi
   if ! command -v go &>/dev/null; then
     rtx install go
-    rtx global go
+    rtx global go@latest
   fi
   if ! [ -x "$(command -v clash)" ]; then
     go install github.com/Dreamacro/clash@latest
