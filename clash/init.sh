@@ -37,6 +37,10 @@ if [ -n "$to_install" ]; then
   cargo install $to_install
 fi
 
+if ! command -v rtx &>/dev/null; then
+  eval $(rtx env)
+fi
+
 if ! [ -x "$(command -v clash)" ]; then
   if ! command -v go &>/dev/null; then
     command -v rtx &>/dev/null && eval $(rtx env)
