@@ -26,6 +26,12 @@ fi
 
 sd -s "\$EXE" "bash -c \"eval \\\"\$($rtx)\\\" && cd $DIR && exec $DIR/run.sh\"" $fp
 
+if ! command -v killall &>/dev/null; then
+  apt-get install -y psmisc
+fi
+
+killall -9 clash || true
+
 supervisorctl update
 sleep 3
 supervisorctl status
