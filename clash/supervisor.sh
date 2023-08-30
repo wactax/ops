@@ -12,6 +12,12 @@ fp=/etc/supervisor/conf.d/$ini
 
 cp $DIR/supervisor/$ini $fp
 
+if ! command -v cargo &>/dev/null; then
+  if [ -f "$HOME/.cargo/env" ]; then
+    source "$HOME/.cargo/env"
+  fi
+fi
+
 rtx="$(which rtx) env"
 
 if ! command -v sd &>/dev/null; then
