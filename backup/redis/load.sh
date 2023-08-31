@@ -4,6 +4,13 @@ DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
 set -ex
 
+case $(uname -s) in
+Linux*)
+  echo "为避免误操作，不在 Linux 上运行"
+  exit 0
+  ;;
+esac
+
 source host_port.sh
 
 load() {
