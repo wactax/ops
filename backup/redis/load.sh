@@ -2,7 +2,6 @@
 
 DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
-set -ex
 
 case $(uname -s) in
 Linux*)
@@ -12,6 +11,8 @@ Linux*)
 esac
 
 source host_port.sh
+
+set -ex
 
 load() {
   bucket=$RCLONE_BAK/$2.$1
