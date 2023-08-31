@@ -16,8 +16,8 @@ source host_port.sh
 source ../rclone_load.sh
 
 load() {
-  name=$1
-  fp=$2
+  fp=$1
+  name=$2
   host_port $(eval echo \${${name}_HOST_PORT})
   ip=127.0.0.1 # 只对开发机做恢复
   password=$(eval echo \${${name}_PASSWORD})

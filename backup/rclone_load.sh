@@ -13,6 +13,6 @@ rclone_load() {
   mkdir -p $tmp
   local fp=$tmp/$bak
   rclone copy --progress $file $tmp
-  $3 $name $fp # load
+  $3 $fp $name # load
   rm -rf $fp
 }
