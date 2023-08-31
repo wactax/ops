@@ -11,6 +11,10 @@ git config --global url."https://ghproxy.com/https://github.com".insteadOf "http
   export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static &&
   export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
 
+apt-get update
+apt-get install -y \
+  wget yasm tar unzip zstd git direnv tmux gcc git-lfs bzip2 htop g++ bash libssl-dev pkg-config cmake pbzip2 curl rsync netcat-openbsd psmisc
+
 if [ ! -f "$HOME/.cargo/env" ]; then
   curl https://sh.rustup.rs -sSf | sh -s -- -y --no-modify-path --default-toolchain nightly
 fi
