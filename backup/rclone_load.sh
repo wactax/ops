@@ -12,7 +12,7 @@ rclone_load() {
   local tmp=/tmp/$bucket
   mkdir -p $tmp
   local fp=$tmp/$bak
-  rclone copy --progress $file $tmp
+  rclone copy --stats-one-line --progress $file $tmp
   $3 $fp $name # load
-  rm -rf $fp
+  rm -rf $(dirname $fp)
 }
