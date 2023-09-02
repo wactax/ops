@@ -28,5 +28,5 @@ console.log await Q.GET.collections()
 #
 # await $"#{ROOT}/rclone_cp.sh #{ofp} #{rdir}/"
 # await $"#{ROOT}/rclone_rm.sh #{rdir}"
-#
-# process.exit()
+
+process.exit()
