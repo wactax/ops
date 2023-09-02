@@ -25,5 +25,5 @@ load() {
 }
 
 for name in $REDIS_LI; do
-  rclone_load $name redis load
+  rclone_load redis $name load
 done

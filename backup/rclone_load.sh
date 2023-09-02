@@ -5,9 +5,10 @@ NC='\033[0m' # No Color
 rget='wget -P -N -c --random-wait --retry-connrefused --waitretry=5 --tries=20 -O'
 
 rclone_load() {
-  local name=$1
+  local kind=$1
+  local name=$2
   echo -e "\n${GREEN}$name${NC}\n"
-  local bucket=$RCLONE_BAK/$2.$name
+  local bucket=$RCLONE_BAK/$kind.$name
   local json=$(rclone lsjson $bucket | jq -r ".[-1]")
   local bak=$(echo $json | jq -r ".Name")
   local tmp=/tmp/$(echo $bucket | tr -d ':')
@@ -16,7 +17,7 @@ rclone_load() {
 
   bucket_bak=$bucket/$bak
 
-  local url=https://$CDN/$2.$name/$bak
+  local url=https://$CDN/$kind.$name/$bak
   if [[ $(echo $json | jq -r '.IsDir') == "true" ]]; then
     mkdir -p $fp
     for name in $(rclone lsjson $bucket_bak | jq -r '.[].Path'); do

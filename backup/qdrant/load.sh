@@ -24,4 +24,4 @@ load() {
   #   pv $fp | zstd -d -c | redis-cli -h $ip -p $port -a $password --pipe
 }
 
-rclone_load clip qdrant load
+rclone_load qdrant clip load
