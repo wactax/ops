@@ -12,30 +12,23 @@ rm = (name)=>
     await Q.DELETE.collections[name].snapshots[snapshot_name]()
   return
 
+TODAY = new Date().toISOString().slice(0,10)
+
+TMP = '/tmp/qdrant'
+await "mkdir -p #{TMP}"
+
+RDIR = 'qdrant'
+
 for {name} from collections
   {name:snapshot_name} = await Q.POST.collections[name].snapshots()
-  console.log snapshot_name
-  # await rm name
-# {snapshots:snapshots_rm} = Q.DELETE
+  fp = join '/mnt/data/xxai.art/qdrant/snapshots',name,snapshot_name
+  zstd_name = name+'.snapshots.zstd'
+  zstd_fp = join TMP, zstd_name
+  await $"rm -rf #{zstd_fp}"
+  await $"zstd -16 -T0 -o #{zstd_fp}"
+  await rm name
+  await $"#{ROOT}/rclone_cp.sh #{zstd_fp} #{RDIR}/#{TODAY}/"
 
-# ROOT = dirname uridir import.meta
-# {name} = await Q.POST.snapshots()
-# fp = join '/mnt/data/xxai.art/qdrant/snapshots',name
-#
-# tmp = '/tmp/qdrant'
-#
-# await $"mkdir -p #{tmp}"
-# ofp = join tmp,name+'.zstd'
-#
-# await $"rm -rf #{ofp}"
-# await $"zstd -16 -T0 -o #{ofp} #{fp}"
-#
-# for {name} from await Q.GET.snapshots()
-#   await snapshots_rm[name]()
-#
-# rdir = 'qdrant.clip'
-#
-# await $"#{ROOT}/rclone_cp.sh #{ofp} #{rdir}/"
-# await $"#{ROOT}/rclone_rm.sh #{rdir}"
+await $"#{ROOT}/rclone_rm.sh #{RDIR}"
 
 process.exit()
