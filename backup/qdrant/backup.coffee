@@ -6,8 +6,8 @@
 
 ROOT = dirname uridir import.meta
 
-{name} = await Q.POST.snapshots()
-
+#{name} = await Q.POST.snapshots()
+name = 'full-snapshot-2023-09-02-04-54-51.snapshot'
 fp = join '/mnt/data/xxai.art/qdrant/snapshots',name
 
 tmp = '/tmp/qdrant'
