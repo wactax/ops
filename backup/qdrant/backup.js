@@ -42,7 +42,7 @@ for (x of collections) {
   zstd_name = name + '.snapshots.zstd';
   zstd_fp = join(TMP, zstd_name);
   await $`rm -rf ${zstd_fp}`;
-  await $`zstd -16 -T0 -o ${zstd_fp}`;
+  await $`pv ${fp} | zstd -16 -T0 -o ${zstd_fp}`;
   await rm(name);
   await $`${ROOT}/rclone_cp.sh ${zstd_fp} ${RDIR}/${TODAY}/`;
 }
