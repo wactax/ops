@@ -1,5 +1,5 @@
 #!/usr/bin/env -S node --loader=@w5/jsext --trace-uncaught --expose-gc --unhandled-rejections=strict
-var ROOT, fp, name, ofp, rdir, ref, snapshots_rm, tmp, x;
+var RDIR, TMP, TODAY, collections, fp, name, rm, snapshot_name, x, zstd_fp, zstd_name;
 
 import Q from '@w5/qdrant';
 
@@ -12,36 +12,41 @@ import 'zx/globals';
 
 import uridir from '@w5/uridir';
 
-({
-  snapshots: snapshots_rm
-} = Q.DELETE);
+({collections} = (await Q.GET.collections()));
 
-ROOT = dirname(uridir(import.meta));
+rm = async(name) => {
+  var ref, snapshot_name, x;
+  ref = (await Q.GET.collections[name].snapshots());
+  for (x of ref) {
+    ({
+      name: snapshot_name
+    } = x);
+    await Q.DELETE.collections[name].snapshots[snapshot_name]();
+  }
+};
 
-({name} = (await Q.POST.snapshots()));
+TODAY = new Date().toISOString().slice(0, 10);
 
-fp = join('/mnt/data/xxai.art/qdrant/snapshots', name);
+TMP = '/tmp/qdrant';
 
-tmp = '/tmp/qdrant';
+await `mkdir -p ${TMP}`;
 
-await $`mkdir -p ${tmp}`;
+RDIR = 'qdrant';
 
-ofp = join(tmp, name + '.zstd');
-
-await $`rm -rf ${ofp}`;
-
-await $`zstd -16 -T0 -o ${ofp} ${fp}`;
-
-ref = (await Q.GET.snapshots());
-for (x of ref) {
+for (x of collections) {
   ({name} = x);
-  await snapshots_rm[name]();
+  ({
+    name: snapshot_name
+  } = (await Q.POST.collections[name].snapshots()));
+  fp = join('/mnt/data/xxai.art/qdrant/snapshots', name, snapshot_name);
+  zstd_name = name + '.snapshots.zstd';
+  zstd_fp = join(TMP, zstd_name);
+  await $`rm -rf ${zstd_fp}`;
+  await $`zstd -16 -T0 -o ${zstd_fp}`;
+  await rm(name);
+  await $`${ROOT}/rclone_cp.sh ${zstd_fp} ${RDIR}/${TODAY}/`;
 }
 
-rdir = 'qdrant.clip';
-
-await $`${ROOT}/rclone_cp.sh ${ofp} ${rdir}/`;
-
-await $`${ROOT}/rclone_rm.sh ${rdir}`;
+await $`${ROOT}/rclone_rm.sh ${RDIR}`;
 
 process.exit();
