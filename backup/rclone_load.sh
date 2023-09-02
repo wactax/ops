@@ -24,7 +24,7 @@ rclone_load() {
     done
   else
     mkdir -p $tmp
-    $rget $fp/$bak $url
+    $rget $fp $url
   fi
 
   $3 $fp $name # load
