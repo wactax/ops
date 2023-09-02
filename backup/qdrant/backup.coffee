@@ -5,9 +5,9 @@
   @w5/uridir
 
 
-console.log await Q.GET.collections()
+{collections} = await Q.GET.collections()
 
-# {snapshots:snapshots_rm} = Q.DELETE
+{snapshots:snapshots_rm} = Q.DELETE
 
 # ROOT = dirname uridir import.meta
 # {name} = await Q.POST.snapshots()
@@ -21,8 +21,8 @@ console.log await Q.GET.collections()
 # await $"rm -rf #{ofp}"
 # await $"zstd -16 -T0 -o #{ofp} #{fp}"
 #
-# for {name} from await Q.GET.snapshots()
-#   await snapshots_rm[name]()
+for {name} from await Q.GET.snapshots()
+  await snapshots_rm[name]()
 #
 # rdir = 'qdrant.clip'
 #
