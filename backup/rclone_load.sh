@@ -21,8 +21,8 @@ rclone_load() {
   local url=https://$CDN/$name/$bak
   if [[ $(echo $json | jq -r '.IsDir') == "true" ]]; then
     mkdir -p $fp
-    for name in $(rclone lsjson $bucket_bak | jq -r '.[].Path'); do
-      rget $fp/$name $url/$name
+    for i in $(rclone lsjson $bucket_bak | jq -r '.[].Path'); do
+      rget $fp/$i $url/$i
     done
   else
     mkdir -p $tmp
