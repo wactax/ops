@@ -7,7 +7,15 @@
 
 {collections} = await Q.GET.collections()
 
-{snapshots:snapshots_rm} = Q.DELETE
+rm = (name)=>
+
+  return
+
+for {name} from collections
+  await Q.POST.collections[name].snapshots()
+  # for {name:snapshot_name} from await Q.GET.collections[name].snapshots()
+  #   await Q.DELETE.collections[name].snapshots[snapshot_name]()
+# {snapshots:snapshots_rm} = Q.DELETE
 
 # ROOT = dirname uridir import.meta
 # {name} = await Q.POST.snapshots()
@@ -21,8 +29,8 @@
 # await $"rm -rf #{ofp}"
 # await $"zstd -16 -T0 -o #{ofp} #{fp}"
 #
-for {name} from await Q.GET.snapshots()
-  await snapshots_rm[name]()
+# for {name} from await Q.GET.snapshots()
+#   await snapshots_rm[name]()
 #
 # rdir = 'qdrant.clip'
 #
