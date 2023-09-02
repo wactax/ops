@@ -18,4 +18,4 @@ load() {
   done
 }
 
-rclone_load pg $name load
+rclone_load pg.$name
