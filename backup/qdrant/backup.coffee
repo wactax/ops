@@ -24,10 +24,14 @@ rm = (name)=>
 
 for {name} from collections
   {name:snapshot_name} = await Q.POST.collections[name].snapshots()
-  fp = join '/mnt/data/xxai.art/qdrant/snapshots',name,snapshot_name
+
   zstd_name = name+'.snapshots.zstd'
   zstd_fp = join TMP, zstd_name
-  await $"pv -p -t -e #{fp}".pipe $"zstd -16 -T0 -o #{zstd_fp}"
+
+  fp = join '/mnt/data/xxai.art/qdrant/snapshots',name,snapshot_name
+
+  await $"zstd -16 -T0 -o #{zstd_fp} #{fp}"
+
   await rm name
 
 await $"#{ROOT}/rclone_cp.sh #{TMP}/ #{RDIR}/#{TODAY}/"
