@@ -22,7 +22,7 @@ rclone_load() {
   if [[ $(echo $json | jq -r '.IsDir') == "true" ]]; then
     mkdir -p $fp
     for name in $(rclone lsjson $bucket_bak | jq -r '.[].Path'); do
-      $rget $fp/$name $url/$name
+      rget $fp/$name $url/$name
     done
   else
     mkdir -p $tmp
