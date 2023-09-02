@@ -1,5 +1,5 @@
 #!/usr/bin/env -S node --loader=@w5/jsext --trace-uncaught --expose-gc --unhandled-rejections=strict
-var RDIR, TMP, TODAY, collections, fp, name, rm, snapshot_name, x, zstd_fp, zstd_name;
+var RDIR, ROOT, TMP, TODAY, collections, fp, name, rm, snapshot_name, x, zstd_fp, zstd_name;
 
 import Q from '@w5/qdrant';
 
@@ -11,6 +11,20 @@ import {
 import 'zx/globals';
 
 import uridir from '@w5/uridir';
+
+RDIR = 'qdrant';
+
+ROOT = uridir(import.meta);
+
+TODAY = new Date().toISOString().slice(0, 10);
+
+TMP = '/tmp/qdrant.bak';
+
+await $`rm -rf ${TMP}`;
+
+TMP = join(TMP, TODAY);
+
+await $`mkdir -p ${TMP}`;
 
 ({collections} = (await Q.GET.collections()));
 
@@ -25,16 +39,6 @@ rm = async(name) => {
   }
 };
 
-TODAY = new Date().toISOString().slice(0, 10);
-
-TMP = '/tmp/qdrant.bak';
-
-await $`rm -rf ${TMP}`;
-
-await $`mkdir -p ${TMP}`;
-
-RDIR = 'qdrant';
-
 for (x of collections) {
   ({name} = x);
   ({
@@ -47,7 +51,7 @@ for (x of collections) {
   await rm(name);
 }
 
-await $`${ROOT}/rclone_cp.sh ${TMP}/ ${RDIR}/${TODAY}`;
+await $`${ROOT}/rclone_cp.sh ${TMP}/ ${RDIR}/${TODAY}/`;
 
 await $`${ROOT}/rclone_rm.sh ${RDIR}`;
 
