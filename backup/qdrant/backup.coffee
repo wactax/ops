@@ -5,7 +5,7 @@
   @w5/uridir
 
 RDIR = 'qdrant'
-ROOT = uridir import.meta
+ROOT = dirname uridir import.meta
 TODAY = new Date().toISOString().slice(0,10)
 TMP = '/tmp/qdrant.bak'
 
@@ -27,7 +27,7 @@ for {name} from collections
   fp = join '/mnt/data/xxai.art/qdrant/snapshots',name,snapshot_name
   zstd_name = name+'.snapshots.zstd'
   zstd_fp = join TMP, zstd_name
-  await $"pv #{fp} | zstd -16 -T0 -o #{zstd_fp}"
+  await $"pv -p -t -e #{fp} | zstd -16 -T0 -o #{zstd_fp}".pipe(process.stdout)
   await rm name
 
 await $"#{ROOT}/rclone_cp.sh #{TMP}/ #{RDIR}/#{TODAY}/"
