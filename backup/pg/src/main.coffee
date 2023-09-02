@@ -13,20 +13,20 @@
 
 {PG_BACKUP_TABLE,PG_URI,APG_URI} = process.env
 
-bucket='sj-backup:backup'
-
-rmOutdate = =>
-  {stdout} = await $"rclone lsjson #{bucket}"
-
-  date=new Date
-  nowym = date.getFullYear()*12 + date.getMonth()+1
-
-  for {Path} from JSON.parse stdout
-    if Path.length == 6
-      ym = parseInt Path
-      if ym
-        if (nowym - (parseInt(ym/100)*12+ym%100))>3
-          await $"rclone delete #{bucket+'/'+ym}"
+# bucket='sj-backup:backup'
+#
+# rmOutdate = =>
+#   {stdout} = await $"rclone lsjson #{bucket}"
+#
+#   date=new Date
+#   nowym = date.getFullYear()*12 + date.getMonth()+1
+#
+#   for {Path} from JSON.parse stdout
+#     if Path.length == 6
+#       ym = parseInt Path
+#       if ym
+#         if (nowym - (parseInt(ym/100)*12+ym%100))>3
+#           await $"rclone delete #{bucket+'/'+ym}"
 
 dump = (uri)=>
   if not uri
