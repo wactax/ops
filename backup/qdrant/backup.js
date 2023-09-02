@@ -47,7 +47,7 @@ for (x of collections) {
   fp = join('/mnt/data/xxai.art/qdrant/snapshots', name, snapshot_name);
   zstd_name = name + '.snapshots.zstd';
   zstd_fp = join(TMP, zstd_name);
-  await $`pv -p -t -e ${fp} | zstd -16 -T0 -o ${zstd_fp}`.pipe(process.stdout);
+  await $`pv -p -t -e ${fp}`.pipe($`zstd -16 -T0 -o ${zstd_fp}`);
   await rm(name);
 }
 
