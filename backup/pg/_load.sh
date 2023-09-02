@@ -12,7 +12,6 @@ uri=$2
 schema=$3
 
 load() {
-  fp=$(dirname $1)
   for s in $schema; do
     pv $fp/$s.zstd | zstd -d -c | pg_restore --disable-triggers -d "$uri"
   done
