@@ -38,7 +38,7 @@ for (x of ref) {
   await snapshots_rm[name]();
 }
 
-rdir = 'qdrant';
+rdir = 'qdrant.clip';
 
 await $`${ROOT}/rclone_cp.sh ${ofp} ${rdir}/`;
 
