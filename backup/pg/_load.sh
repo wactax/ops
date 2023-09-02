@@ -13,6 +13,7 @@ schema=$3
 
 load() {
   for s in $schema; do
+    echo "→ 加载表 $s 数据"
     pv $fp/$s.zstd | zstd -d -c | pg_restore --disable-triggers -d "$uri"
   done
 }
