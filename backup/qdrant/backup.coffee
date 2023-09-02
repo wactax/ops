@@ -16,7 +16,7 @@ TODAY = new Date().toISOString().slice(0,10)
 
 TMP = '/tmp/qdrant.bak'
 await $"rm -rf #{TMP}"
-await "mkdir -p #{TMP}"
+await $"mkdir -p #{TMP}"
 
 RDIR = 'qdrant'
 
