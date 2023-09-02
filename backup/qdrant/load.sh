@@ -12,8 +12,6 @@ Linux*)
   ;;
 esac
 
-./build.sh
-
 source ../rclone_load.sh
 
 #nc -z -w 1 127.0.0.1 7890 && export https_proxy=http://127.0.0.1:7890
@@ -30,18 +28,15 @@ load() {
     echo $name
     outdir=$DIR/snapshots/$name
     mkdir -p $outdir
-    pv $dir/$i | zstd -d -c >$outdir/$day.snapshots
-    ./lib/load.js $name
-  done
+    ofp=$outdir/$day.snapshot
+    pv $dir/$i | zstd -d -c >$ofp
+    curl -X POST \
+      "$QDRANT_HTTP/collections/$name/snapshots/upload" \
+      -H 'Content-Type:multipart/form-data' \
+      -H "api-key:$QDRANT__SERVICE__API_KEY" \
+      -F "snapshot=@$ofp"
 
-  # name=$2
-  # echo $fp $name
-  # ./load.coffee $fp
-  #   host_port $(eval echo \${${name}_HOST_PORT})
-  #   ip=127.0.0.1 # 只对开发机做恢复
-  #   password=$(eval echo \${${name}_PASSWORD})
-  # pv $fp | zstd -d -c >$DIR/snapshots/$name.$(echo $(basename $fp) | sed 's/\.[^\.]*$//')
-  # exit 1
+  done
 }
 
 rclone_load qdrant
