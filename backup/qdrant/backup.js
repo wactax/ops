@@ -47,7 +47,7 @@ for (x of collections) {
   await rm(name);
 }
 
-await $`${ROOT}/rclone_cp.sh ${TMP} ${RDIR}/${TODAY}/`;
+await $`${ROOT}/rclone_cp.sh ${TMP}/ ${RDIR}/${TODAY}`;
 
 await $`${ROOT}/rclone_rm.sh ${RDIR}`;
 
