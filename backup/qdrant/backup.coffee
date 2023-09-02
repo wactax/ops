@@ -28,7 +28,7 @@ for {name} from collections
   await $"pv #{fp} | zstd -16 -T0 -o #{zstd_fp}"
   await rm name
 
-await $"#{ROOT}/rclone_cp.sh #{TMP}/ #{RDIR}/#{TODAY}/"
+await $"#{ROOT}/rclone_cp.sh #{TMP}/ #{RDIR}/#{TODAY}"
 await $"#{ROOT}/rclone_rm.sh #{RDIR}"
 
 process.exit()
