@@ -2,7 +2,9 @@
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
-rget='aria2c -x 16 -s 99 --max-tries=99 --retry-wait=1 --timeout=6 --connect-timeout=6 -o'
+rget() {
+  aria2c -x 16 -s 99 --max-tries=99 --retry-wait=1 --timeout=6 --connect-timeout=6 -o $(basename $1) -d $(dirname $1) $2
+}
 
 rclone_load() {
   local name=$1
