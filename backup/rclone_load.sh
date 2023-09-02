@@ -2,7 +2,7 @@
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
-rget='wget -P -N -c --random-wait --retry-connrefused --waitretry=1 --tries=99 -O'
+rget='wget -q --show-progress --progress=bar:force -c --random-wait --retry-connrefused --waitretry=1 --tries=99 -O'
 
 rclone_load() {
   local name=$1

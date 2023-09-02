@@ -31,7 +31,7 @@
     schema_li.push schema
     if schema != 'public'
       await sh """#{psql} -c "DROP SCHEMA #{schema} CASCADE" || true"""
-    await sh "#{psql} < #{sql}"
+    await sh "#{psql} < #{sql} >/dev/null"
   await $"#{ROOT}/_load.sh #{ol} #{pguri} #{schema_li.join(' ')}"
   return
 
