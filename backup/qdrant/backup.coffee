@@ -21,7 +21,7 @@ await $"zstd -16 -T0 -o #{ofp} #{fp}"
 for {name} from await Q.GET.snapshots()
   await snapshots_rm[name]()
 
-rdir = 'qdrant'
+rdir = 'qdrant.clip'
 
 await $"#{ROOT}/rclone_cp.sh #{ofp} #{rdir}/"
 await $"#{ROOT}/rclone_rm.sh #{rdir}"

@@ -28,5 +28,5 @@ rclone_load() {
   fi
 
   $3 $fp $name # load
-  rm -rf $(dirname $fp)
+  #rm -rf $(dirname $fp)
 }
