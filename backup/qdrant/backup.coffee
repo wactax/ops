@@ -8,13 +8,14 @@
 {collections} = await Q.GET.collections()
 
 rm = (name)=>
-
+  for {name:snapshot_name} from await Q.GET.collections[name].snapshots()
+    await Q.DELETE.collections[name].snapshots[snapshot_name]()
   return
 
 for {name} from collections
-  await Q.POST.collections[name].snapshots()
-  # for {name:snapshot_name} from await Q.GET.collections[name].snapshots()
-  #   await Q.DELETE.collections[name].snapshots[snapshot_name]()
+  {name:snapshot_name} = await Q.POST.collections[name].snapshots()
+  console.log snapshot_name
+  # await rm name
 # {snapshots:snapshots_rm} = Q.DELETE
 
 # ROOT = dirname uridir import.meta
