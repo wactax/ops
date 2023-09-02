@@ -2,7 +2,7 @@
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
-rget='wget -q --show-progress --progress=bar:force -c --random-wait --retry-connrefused --waitretry=1 --tries=99 -O'
+rget='aria2c -x 16 -s 99 --max-tries=99 --retry-wait=1 --timeout=6 --connect-timeout=6 -o'
 
 rclone_load() {
   local name=$1

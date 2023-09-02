@@ -14,7 +14,7 @@ esac
 
 source ../rclone_load.sh
 
-nc -z -w 1 127.0.0.1 7890 && export https_proxy=http://127.0.0.1:7890
+#nc -z -w 1 127.0.0.1 7890 && export https_proxy=http://127.0.0.1:7890
 
 load() {
   fp=$1
