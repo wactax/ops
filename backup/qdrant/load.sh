@@ -23,8 +23,8 @@ load() {
   #   host_port $(eval echo \${${name}_HOST_PORT})
   #   ip=127.0.0.1 # 只对开发机做恢复
   #   password=$(eval echo \${${name}_PASSWORD})
-  pv $fp | zstd -d -c >$DIR/snapshots/$name.$(echo $(basename $fp) | sed 's/\.[^\.]*$//')
-  exit 1
+  # pv $fp | zstd -d -c >$DIR/snapshots/$name.$(echo $(basename $fp) | sed 's/\.[^\.]*$//')
+  # exit 1
 }
 
-rclone_load qdrant clip load
+rclone_load qdrant
