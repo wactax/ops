@@ -14,7 +14,8 @@ rm = (name)=>
 
 TODAY = new Date().toISOString().slice(0,10)
 
-TMP = '/tmp/qdrant'
+TMP = '/tmp/qdrant.bak'
+await $"rm -rf #{TMP}"
 await "mkdir -p #{TMP}"
 
 RDIR = 'qdrant'
@@ -24,11 +25,10 @@ for {name} from collections
   fp = join '/mnt/data/xxai.art/qdrant/snapshots',name,snapshot_name
   zstd_name = name+'.snapshots.zstd'
   zstd_fp = join TMP, zstd_name
-  await $"rm -rf #{zstd_fp}"
   await $"pv #{fp} | zstd -16 -T0 -o #{zstd_fp}"
   await rm name
-  await $"#{ROOT}/rclone_cp.sh #{zstd_fp} #{RDIR}/#{TODAY}/"
 
+await $"#{ROOT}/rclone_cp.sh #{TMP} #{RDIR}/#{TODAY}/"
 await $"#{ROOT}/rclone_rm.sh #{RDIR}"
 
 process.exit()
