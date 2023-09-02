@@ -5,7 +5,7 @@
   @w5/uridir
 
 RDIR = 'qdrant'
-ROOT = dirname uridir import.meta
+ROOT = dirname dirname uridir import.meta
 TODAY = new Date().toISOString().slice(0,10)
 TMP = '/tmp/qdrant.bak'
 

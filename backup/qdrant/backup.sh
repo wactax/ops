@@ -4,4 +4,4 @@ DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
 set -ex
 
-exec ./backup.js
+exec ./lib/backup.js

@@ -18,16 +18,20 @@ source ../rclone_load.sh
 
 #nc -z -w 1 127.0.0.1 7890 && export https_proxy=http://127.0.0.1:7890
 
+trim() {
+  echo $1 | sed 's/\.[^\.]*$//'
+}
+
 load() {
   dir=$1
   day=$(basename $dir)
   for i in "$(ls $dir)"; do
-    name=$(echo $i | sed 's/\.[^\.]*$//')
+    name=$(trim $(trim $i))
     echo $name
     outdir=$DIR/snapshots/$name
     mkdir -p $outdir
     pv $dir/$i | zstd -d -c >$outdir/$day.snapshots
-    ./load.js $name
+    ./lib/load.js $name
   done
 
   # name=$2
