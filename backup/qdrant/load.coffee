@@ -1,17 +1,9 @@
 #!/usr/bin/env coffee
 
-> zx/globals:
-  @w5/uridir
+> @w5/qdrant:Q
 
-< default main = =>
-  ROOT = uridir(import.meta)
-  cd ROOT
+[
+  name
+] = process.argv.slice(2)
 
-  await $"ls #{ROOT}"
-  await $'pwd'
-  return
-
-if process.argv[1] == decodeURI (new URL(import.meta.url)).pathname
-  await main()
-  process.exit()
-
+console.log '!',{name}
