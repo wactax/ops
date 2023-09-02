@@ -25,10 +25,10 @@ load() {
   day=$(basename $dir)
   for i in "$(ls $dir)"; do
     name=$(trim $(trim $i))
-    echo $name
     outdir=$DIR/snapshots/$name
     mkdir -p $outdir
     ofp=$outdir/$day.snapshot
+    echo "→ 解压 $ofp"
     pv $dir/$i | zstd -d -c >$ofp
     echo "→ 导入 ${name}"
     curl --progress-bar -X POST \
