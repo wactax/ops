@@ -15,7 +15,7 @@ dump() {
   mkdir -p $(dirname $tmp)
   docker run -e"REDISDUMPGO_AUTH=$password" \
     ghcr.io/yannh/redis-dump-go:latest \
-    -host $ip -port $port | zstd -19 >$tmp
+    -host $ip -port $port | zstd -16 >$tmp
 
   rdir=redis.$1
   ../rclone_cp.sh $tmp $rdir
