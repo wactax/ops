@@ -4,7 +4,7 @@
   path > join basename dirname
 
 dump = (fp, uri, schema)=>
-  await $"pg_dump #{uri} --data-only -n #{schema} -Fc -Z0 | zstd > #{fp}"
+  await $"pg_dump #{uri} --data-only -n #{schema} -Fc -Z0 | zstd -T0 -15 > #{fp}"
   return
 
 RCLONE = join dirname(ROOT),'rclone_'
