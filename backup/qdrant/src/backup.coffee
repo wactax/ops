@@ -6,7 +6,7 @@
 
 RDIR = 'qdrant'
 ROOT = dirname dirname uridir import.meta
-TODAY = new Date().toISOString().slice(0,10)
+TODAY = new Date().toISOString().slice(0,19).replace('T','_').replaceAll(':','.')
 TMP = '/tmp/qdrant.bak'
 
 await $"rm -rf #{TMP}"
