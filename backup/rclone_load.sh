@@ -9,7 +9,7 @@ rget() {
     fi
   fi
 
-  aria2c -x 16 -s 999 --max-tries=99 --retry-wait=1 --timeout=6 --connect-timeout=6 -o $(basename $1) -d $(dirname $1) $2
+  aria2c -x 16 -k 1M --max-tries=99 --retry-wait=1 --timeout=6 --connect-timeout=6 -o $(basename $1) -d $(dirname $1) $2
 }
 
 rclone_load() {
