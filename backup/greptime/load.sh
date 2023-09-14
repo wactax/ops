@@ -22,29 +22,16 @@ load() {
   dir=$1
   day=$(basename $dir)
   for i in "$dir"/*.zstd; do
-    echo $i
     parquet=${i%.zstd}
-    pv $i | zstd -d -c >$parquet
     name=$(basename $parquet)
+    table=${name%.parquet}
+    echo -e "\n$table"
+    pv $i | zstd -d -c >$parquet
     tmp=$TMP/$name
     mv $parquet $tmp
-    table=${name%.parquet}
 
     psql postgres://$GT_URI -c "COPY $table FROM '$tmp' WITH (FORMAT = 'parquet')"
     rm -rf $tmp
-
-    # name=$(trim $(trim $i))
-    # outdir=$DIR/snapshots/$name
-    # mkdir -p $outdir
-    # ofp=$outdir/$day.snapshot
-    # echo "→ 解压 $ofp"
-    # echo "→ 导入 ${name}"
-    # curl --progress-bar -X POST \
-    #   "$QDRANT_HTTP/collections/$name/snapshots/upload" \
-    #   -H 'Content-Type:multipart/form-data' \
-    #   -H "api-key:$QDRANT__SERVICE__API_KEY" \
-    #   -F "snapshot=@$ofp"
-    # rm -rf $ofp
   done
 }
 
