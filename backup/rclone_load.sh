@@ -36,6 +36,6 @@ rclone_load() {
   fi
 
   load $fp $name # load
-  #rm -rf $(dirname $fp)
+  rm -rf $(dirname $fp)
   echo '✅ 👌'
 }
