@@ -3,10 +3,11 @@
   path > join dirname
   zx/globals:
   @w5/uridir
+  @w5/time/Today
 
 RDIR = 'qdrant'
 ROOT = dirname dirname uridir import.meta
-TODAY = new Date().toISOString().slice(0,19).replace('T','_').replaceAll(':','.')
+TODAY = Today()
 TMP = '/tmp/qdrant.bak'
 
 await $"rm -rf #{TMP}"

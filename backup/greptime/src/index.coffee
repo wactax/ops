@@ -2,8 +2,14 @@
 
 > postgres
   fs > mkdirSync
-  fs/promises > rmdir
+  fs/promises > rmdir unlink
   @w5/walk
+  zx/globals:
+  @w5/uridir
+  path > dirname
+  @w5/time/Today
+
+ROOT = dirname dirname uridir import.meta
 
 {GT_URI} = process.env
 
@@ -12,16 +18,24 @@ GT = postgres(
   fetch_types:false
 )
 
-BACKUP_DIR = '/tmp/backup/greptime'
+TMP = '/tmp/backup/greptime'
 
-mkdirSync BACKUP_DIR,recursive:true
+mkdirSync TMP,recursive:true
 
-for await i from walk BACKUP_DIR
-  await rmdir i
+
+for await i from walk TMP
+  await unlink i
 
 for {Tables:table} from await GT'show tables'.simple()
   console.log table
-  await GT"COPY #{table} TO '#{BACKUP_DIR}/#{table}.parquet' WITH (FORMAT='parquet')".simple()
+  sql = "COPY #{table} TO '#{TMP}/#{table}.parquet' WITH (FORMAT='parquet')"
+  await GT.unsafe(sql).simple()
 
+for await i from walk TMP, (i)=>!i.endsWith '.parquet'
+   await $"zstd -T0 -16 #{i} -o #{i}.zstd"
+   await unlink i
+
+TODAY = Today()
+await $"#{ROOT}/rclone_cp.sh #{TMP}/ greptime/#{TODAY}/"
 
 process.exit()
