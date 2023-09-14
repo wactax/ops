@@ -30,14 +30,14 @@ load() {
     ofp=$outdir/$day.snapshot
     echo "→ 解压 $ofp"
     pv $dir/$i | zstd -d -c >$ofp
-    echo "→ 导入 ${name}"
-    curl --progress-bar -X POST \
-      "$QDRANT_HTTP/collections/$name/snapshots/upload" \
-      -H 'Content-Type:multipart/form-data' \
-      -H "api-key:$QDRANT__SERVICE__API_KEY" \
-      -F "snapshot=@$ofp"
-    rm -rf $ofp
+    # echo "→ 导入 ${name}"
+    # curl --progress-bar -X POST \
+    #   "$QDRANT_HTTP/collections/$name/snapshots/upload" \
+    #   -H 'Content-Type:multipart/form-data' \
+    #   -H "api-key:$QDRANT__SERVICE__API_KEY" \
+    #   -F "snapshot=@$ofp"
+    # rm -rf $ofp
   done
 }
 
-rclone_load qdrant
+rclone_load greptime
