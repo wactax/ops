@@ -16,20 +16,28 @@ source ../rclone_load.sh
 
 #nc -z -w 1 127.0.0.1 7890 && export https_proxy=http://127.0.0.1:7890
 
-trim() {
-  echo $1 | sed 's/\.[^\.]*$//'
-}
+TMP=/tmp/backup/greptime
 
 load() {
   dir=$1
   day=$(basename $dir)
-  for i in "$(ls $dir)"; do
-    name=$(trim $(trim $i))
-    outdir=$DIR/snapshots/$name
-    mkdir -p $outdir
-    ofp=$outdir/$day.snapshot
-    echo "→ 解压 $ofp"
-    pv $dir/$i | zstd -d -c >$ofp
+  for i in "$dir"/*.zstd; do
+    echo $i
+    parquet=${i%.zstd}
+    pv $i | zstd -d -c >$parquet
+    name=$(basename $parquet)
+    tmp=$TMP/$name
+    mv $parquet $tmp
+    table=${name%.parquet}
+
+    psql postgres://$GT_URI -c "COPY $table FROM '$tmp' WITH (FORMAT = 'parquet')"
+    rm -rf $tmp
+
+    # name=$(trim $(trim $i))
+    # outdir=$DIR/snapshots/$name
+    # mkdir -p $outdir
+    # ofp=$outdir/$day.snapshot
+    # echo "→ 解压 $ofp"
     # echo "→ 导入 ${name}"
     # curl --progress-bar -X POST \
     #   "$QDRANT_HTTP/collections/$name/snapshots/upload" \

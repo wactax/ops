@@ -27,7 +27,13 @@ mkdirSync TMP,recursive:true
 for await i from walk TMP
   await unlink i
 
+IGNORE = new Set [
+  'numbers'
+  'scripts'
+]
 for {Tables:table} from await GT'show tables'.simple()
+  if IGNORE.has table
+    continue
   console.log table
   sql = "COPY #{table} TO '#{TMP}/#{table}.parquet' WITH (FORMAT='parquet')"
   await GT.unsafe(sql).simple()
