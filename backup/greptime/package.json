@@ -1,6 +1,7 @@
 {
   "type": "module",
   "dependencies": {
+    "@w5/walk": "^0.0.1",
     "postgres": "^3.3.5"
   }
 }

@@ -1,17 +1,27 @@
 #!/usr/bin/env coffee
 
-> zx/globals:
-  @w5/uridir
+> postgres
+  fs > mkdirSync
+  fs/promises > rmdir
+  @w5/walk
 
-< default main = =>
-  ROOT = uridir(import.meta)
-  cd ROOT
+{GT_URI} = process.env
 
-  await $"ls #{ROOT}"
-  await $'pwd'
-  return
+GT = postgres(
+  'postgres://'+GT_URI
+  fetch_types:false
+)
 
-if process.argv[1] == decodeURI (new URL(import.meta.url)).pathname
-  await main()
-  process.exit()
+BACKUP_DIR = '/tmp/backup/greptime'
 
+mkdirSync BACKUP_DIR,recursive:true
+
+for await i from walk BACKUP_DIR
+  await rmdir i
+
+for {Tables:table} from await GT'show tables'.simple()
+  console.log table
+  await GT"COPY #{table} TO '#{BACKUP_DIR}/#{table}.parquet' WITH (FORMAT='parquet')".simple()
+
+
+process.exit()
