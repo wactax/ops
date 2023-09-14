@@ -10,3 +10,4 @@ bak() {
 set -ex
 bak redis
 bak pg
+bak greptime
