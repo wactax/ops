@@ -18,7 +18,8 @@ GT = postgres(
   fetch_types:false
 )
 
-TMP = '/tmp/backup/greptime'
+TODAY = Today()
+TMP = "/tmp/backup/greptime/#{TODAY}"
 
 mkdirSync TMP,recursive:true
 
@@ -35,7 +36,6 @@ for await i from walk TMP, (i)=>!i.endsWith '.parquet'
    await $"zstd -T0 -16 #{i} -o #{i}.zstd"
    await unlink i
 
-TODAY = Today()
-await $"#{ROOT}/rclone_cp.sh #{TMP}/ greptime/#{TODAY}/"
+await $"#{ROOT}/rclone_cp.sh #{TMP}/ greptime/#{TODAY}"
 
 process.exit()
