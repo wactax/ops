@@ -23,7 +23,7 @@ trim() {
 load() {
   dir=$1
   day=$(basename $dir)
-  for i in "$(ls $dir)"; do
+  for i in "$dir"/*.zstd; do
     name=$(trim $(trim $i))
     outdir=$DIR/snapshots/$name
     mkdir -p $outdir

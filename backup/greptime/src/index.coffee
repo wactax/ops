@@ -18,7 +18,8 @@ GT = postgres(
   fetch_types:false
 )
 
-TMP = '/tmp/backup/greptime'
+TODAY = Today()
+TMP = "/tmp/backup/greptime/#{TODAY}"
 
 mkdirSync TMP,recursive:true
 
@@ -26,7 +27,13 @@ mkdirSync TMP,recursive:true
 for await i from walk TMP
   await unlink i
 
+IGNORE = new Set [
+  'numbers'
+  'scripts'
+]
 for {Tables:table} from await GT'show tables'.simple()
+  if IGNORE.has table
+    continue
   console.log table
   sql = "COPY #{table} TO '#{TMP}/#{table}.parquet' WITH (FORMAT='parquet')"
   await GT.unsafe(sql).simple()
@@ -35,7 +42,6 @@ for await i from walk TMP, (i)=>!i.endsWith '.parquet'
    await $"zstd -T0 -16 #{i} -o #{i}.zstd"
    await unlink i
 
-TODAY = Today()
-await $"#{ROOT}/rclone_cp.sh #{TMP}/ greptime/#{TODAY}/"
+await $"#{ROOT}/rclone_cp.sh #{TMP}/ greptime/#{TODAY}"
 
 process.exit()
