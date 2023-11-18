@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+[ "$UID" -eq 0 ] || exec sudo "$0" "$@"
 DIR=$(dirname $(realpath "$0"))
 cd $DIR
 set -ex
